@@ -1,25 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import logo from './img/logo.svg';
+// Styled components
+import { Main, Palette, ActionButton } from './components/StyledComponents';
 
 function App() {
+
+  // Local STATE
+  const [colors, setColors] = useState({
+    primary: '#efe782',
+    secondary: '#de782e',
+    tertiary: '#d53d30',
+  });
+  const { primary, secondary, tertiary } = colors; 
+
+  console.log(colors);
+
+  const onBlusrEvent = () => {
+    console.log('Item hover');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+
+      // <Main theme={color}>
+      <Main 
+        colors={colors}
+        onMouseOver={onBlusrEvent}
+      >
+
+        <Palette
+          colors={colors}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <div className="primary"></div>
+          <div className="secondary"></div>
+          <div className="tertiary"></div>
+        </Palette>
+
+        <ActionButton>Vamo'a calmarno</ActionButton>
+
+      </Main>
+
   );
 }
 
