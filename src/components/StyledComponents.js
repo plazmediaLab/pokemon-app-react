@@ -34,8 +34,14 @@ export const Main = styled.div`
     width: 100vw;
     height: 100vh;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    -webkit-transition: opacity 1s linear;
+    -moz-transition: opacity 1s linear;
+    -o-transition: opacity 1s linear;
+    transition: opacity 1s linear;
     /* display: block; */
+  }
+  &:hover .gradiant{
+    opacity: 1;
   }
   /* &:hover::before{
     opacity: 1;
@@ -50,15 +56,15 @@ export const Palette = styled.div`
 
   .primary{
     background: var(--palette-primary);
-    transition: background .5s ease-in-out;
+    transition: background 1s ease-in-out;
   }
   .secondary{
     background: var(--palette-secondary);
-    transition: background .5s ease-in-out;
+    transition: background 1s ease-in-out;
   }
   .tertiary{
     background: var(--palette-tertiary);
-    transition: background .5s ease-in-out;
+    transition: background 1s ease-in-out;
   }
 `;
 

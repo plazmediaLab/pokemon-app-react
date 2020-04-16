@@ -19,11 +19,7 @@ function App() {
   });
 
   const onClickFunc = () => {
-    setAC({
-      primary: '#90cfb3',
-      secondary: '#327258',
-      tertiary: '#b64455',
-    })
+    setAC(bc)
   };
 
   return (
@@ -39,13 +35,10 @@ function App() {
           .main:hover .primary,
           .main:hover .secondary,
           .main:hover .tertiary,
-          .main:hover .gradiant{
+          .gradiant{
             --palette-primary: ${bc.primary};
             --palette-secondary: ${bc.secondary};
             --palette-tertiary: ${bc.tertiary};
-          }
-          .main:hover .gradiant{
-            opacity: 1;
           }
         `}
       />
