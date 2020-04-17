@@ -14,13 +14,6 @@ export const Main = styled.div`
     linear-gradient(90deg, var(--palette-secondary), transparent),
     linear-gradient(-90deg, var(--palette-tertiary), transparent);
 
-  /* background-color: ${props => props.theme}; */
-
-  /* &:hover{
-    --palette-primary: #90cfb3;
-    --palette-secondary: #327258;
-    --palette-tertiary: #b64455;
-  } */
   .gradiant{
     position: absolute;
     z-index: -1;
@@ -38,14 +31,10 @@ export const Main = styled.div`
     -moz-transition: opacity 1s linear;
     -o-transition: opacity 1s linear;
     transition: opacity 1s linear;
-    /* display: block; */
   }
   &:hover .gradiant{
     opacity: 1;
   }
-  /* &:hover::before{
-    opacity: 1;
-  } */
 `;
 
 export const Palette = styled.div`
@@ -68,16 +57,50 @@ export const Palette = styled.div`
   }
 `;
 
-export const ActionButton = styled.button`
-  padding: 1em 2em;
-  font-size: 2rem;
-  border: none; 
-  clip-path: 
-    polygon(10% 0, 100% 0, 100% 0, 100% 65%, 90% 100%, 0 100%, 0 100%, 0 35%);
-  overflow: visible;
+export const ActionForm = styled.form`
+  width: min-content;
+  display: block;
 
-  &:hover{
-    background: #e6e6e6;
-    box-shadow: 0px 7px 7px -5px rgba(0,0,0,0.3)!important;
+  .form-input{
+    position: relative;
+  }
+  .form-input::after{
+    z-index: -1;
+    position: absolute;
+    content: '';
+    top: -5px;
+    left: -5px;
+    transition: background 1s ease-in-out;
+    background: var(--palette-primary);
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    clip-path: 
+      polygon(
+        7% 0,     100% 0,
+        100% 0,   100% 65%,
+        93% 100%, 0 100%,
+        0 100%,   0 35%
+      );
+  }
+  img{
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+  }
+  input{
+    text-align: center;
+    width: 300px;
+    overflow: visible;
+    border: none; 
+    overflow: visible;
+    background: #fff;
+    transition: background 1s ease-in-out;
+    clip-path: 
+      polygon(
+        7% 0,     100% 0,
+        100% 0,   100% 55%,
+        93% 100%, 0 100%,
+        0 100%,   0 40%
+      );
   }
 `;

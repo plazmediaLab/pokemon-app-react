@@ -1,8 +1,10 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import logo from './img/logo.svg';
+import pokeball from './img/pokemon.svg';
 import { Global, css } from '@emotion/core';
 // Styled components
-import { Main, Palette, ActionButton } from './components/StyledComponents';
+import { Main, Palette, ActionForm } from './components/StyledComponents';
+import axios from 'axios';
 
 function App() {
 
@@ -17,9 +19,38 @@ function App() {
     secondary: '#327258',
     tertiary: '#b64455',
   });
+  const [pokeresponse, setPokeResponse] = useState('');
+  const [pokemon, setPokemon] = useState({});
+  const [imgurl, setImgUrl] = useState('');
+  // Refs
+  const imgData = useRef(null);
 
-  const onClickFunc = () => {
-    setAC(bc)
+  // useAffect
+  useEffect(() => {
+    if(Object.keys(pokemon).length > 0){
+      setImgUrl(pokemon.sprites.front_default)
+    }
+  }, [pokemon]);
+
+  // const getImgData = () => {
+  // }
+
+  const handleChange = e => {
+    setPokeResponse(e.target.value);
+  };
+
+  const handleResponse = async e => {
+    e.preventDefault();
+
+    if(pokeresponse.trim() === ''){
+      return
+    }
+    const url = `https://pokeapi.co/api/v2/pokemon/${pokeresponse}/`;
+
+    const request = await axios.get(url);
+    const response = request.data
+    setPokemon(response);
+    
   };
 
   return (
@@ -32,9 +63,11 @@ function App() {
             --palette-secondary: ${ac.secondary};
             --palette-tertiary: ${ac.tertiary};
           }
-          .main:hover .primary,
-          .main:hover .secondary,
-          .main:hover .tertiary,
+
+          body:hover .primary,
+          body:hover .secondary,
+          body:hover .tertiary,
+          body:hover .form-input,
           .gradiant{
             --palette-primary: ${bc.primary};
             --palette-secondary: ${bc.secondary};
@@ -53,9 +86,23 @@ function App() {
           <div className="tertiary"></div>
         </Palette>
 
-        <ActionButton
-          onClick={onClickFunc}
-        >Vamo'a calmarno</ActionButton>
+        <ActionForm
+          onSubmit={handleResponse}
+        >
+          {Object.keys(pokemon).length === 0 
+            ? <img src={pokeball} ref={imgData} alt=""/>
+            : <img src={imgurl} alt=""/>
+          }
+          
+          <div className="form-input">
+            <input 
+              type="text" 
+              placeholder="Write NAME or ID"
+              onChange={handleChange}
+              name="pokemonSelect"
+            />
+          </div>
+        </ActionForm>
 
       </Main>
     </Fragment>
