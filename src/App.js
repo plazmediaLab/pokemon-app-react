@@ -1,86 +1,112 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
-import logo from './img/logo.svg';
-import pokeball from './img/pokemon.svg';
-import { Global, css } from '@emotion/core';
+import React, { useState, useEffect, useRef, Fragment } from "react";
+import logo from "./img/logo.svg";
+import pokeball from "./img/pokemon.svg";
+import { Global, css } from "@emotion/core";
 // Styled components
-import { Main, Palette, ActionForm, Canvas } from './components/StyledComponents';
-import axios from 'axios';
+import {
+  Main,
+  Palette,
+  ActionForm,
+  Canvas,
+} from "./components/StyledComponents";
+import axios from "axios";
 
 function App() {
-
   // Local STATE
   const [ac, setAC] = useState({
-    primary: '#efe782',
-    secondary: '#de782e',
-    tertiary: '#d53d30',
+    primary: "#ee5281",
+    secondary: "#777777",
+    tertiary: "#000000",
   });
   const [bc, setBC] = useState({
-    primary: '#90cfb3',
-    secondary: '#327258',
-    tertiary: '#b64455',
+    primary: "#90cfb3",
+    secondary: "#327258",
+    tertiary: "#b64455",
   });
-  const [pokeresponse, setPokeResponse] = useState('');
+  const [pokeresponse, setPokeResponse] = useState("");
   const [pokemon, setPokemon] = useState({});
-  const [imgurl, setImgUrl] = useState('');
+  const [imgurl, setImgUrl] = useState("");
 
   // Refs
   const CanvasRef = useRef(null);
 
-
-
   // useAffect
   useEffect(() => {
-
-    if(Object.keys(pokemon).length > 0){
+    if (Object.keys(pokemon).length > 0) {
       setImgUrl(pokemon.sprites.front_default);
     }
-    if(imgurl.trim() !== ''){
+    if (imgurl.trim() !== "") {
       renderPokemon(CanvasRef, imgurl);
     }
-    
-
   }, [pokemon, imgurl]);
-
 
   // Get CANVAS DATA
   const renderPokemon = (canvas_arg, img_arg) => {
-    let canvas    = canvas_arg.current,
-        context   = canvas.getContext('2d'),
-        imgObject = new Image();
-    
-    imgObject.setAttribute('crossOrigin', 'anonymous');
+    let canvas = canvas_arg.current,
+      context = canvas.getContext("2d"),
+      imgObject = new Image();
+
+    imgObject.setAttribute("crossOrigin", "anonymous");
     imgObject.src = img_arg;
-    imgObject.addEventListener('load', () => {
-      context.clearRect(0, 0, canvas.width, canvas.height)
+    imgObject.addEventListener("load", () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
       context.drawImage(imgObject, 0, 0, canvas.width, canvas.height);
+      const colorPalette = getColorPalette(canvas, context);
+      // console.log(colorPalette);
+      setBC({
+        primary: `rgb(${colorPalette[0].red}, ${colorPalette[0].green}, ${colorPalette[0].blue})`,
+        secondary: `rgb(${colorPalette[1].red}, ${colorPalette[1].green}, ${colorPalette[1].blue})`,
+        tertiary: `rgb(${colorPalette[2].red}, ${colorPalette[2].green}, ${colorPalette[2].blue})`,
+      });
     });
   };
 
-  const handleChange = e => {
+  // Get colors from image
+  const getColorPalette = (cnv_arg, ctx_arg) => {
+    const imgData = ctx_arg.getImageData(0, 0, cnv_arg.width, cnv_arg.height)
+      .data;
+    const quality = 90;
+    const colors = [];
+
+    for (let i = 0; i < cnv_arg.width * cnv_arg.height; i = i + quality) {
+      const offset = i * 4;
+      const alpha = imgData[offset + 3];
+      if (alpha > 0) {
+        const red = imgData[offset];
+        const green = imgData[offset + 1];
+        const blue = imgData[offset + 2];
+        colors.push({ red, green, blue });
+        // console.log("%c Color ", `background: rgba(${red}, ${green}, ${blue})`);
+      }
+    }
+
+    return colors;
+  };
+
+  const handleChange = (e) => {
     setPokeResponse(e.target.value);
   };
 
-  const handleResponse = async e => {
+  const handleResponse = async (e) => {
     e.preventDefault();
 
-    if(pokeresponse.trim() === ''){
-      return
+    if (pokeresponse.trim() === "") {
+      return;
     }
     const url = `https://pokeapi.co/api/v2/pokemon/${pokeresponse}/`;
 
     const request = await axios.get(url);
-    const response = await request.data
+    const response = await request.data;
 
     setPokemon(response);
-    
   };
 
   return (
     // <Main theme={color}>
     <Fragment>
-      <Global 
+      <Global
         styles={css`
-          :root{
+          :root {
             --palette-primary: ${ac.primary};
             --palette-secondary: ${ac.secondary};
             --palette-tertiary: ${ac.tertiary};
@@ -90,7 +116,7 @@ function App() {
           body:hover .secondary,
           body:hover .tertiary,
           body:hover .form-input,
-          .gradiant{
+          .gradiant {
             --palette-primary: ${bc.primary};
             --palette-secondary: ${bc.secondary};
             --palette-tertiary: ${bc.tertiary};
@@ -99,8 +125,7 @@ function App() {
       />
 
       <Main className="main">
-
-        <div className='gradiant'></div>
+        <div className="gradiant"></div>
 
         <Palette>
           <div className="primary"></div>
@@ -108,29 +133,28 @@ function App() {
           <div className="tertiary"></div>
         </Palette>
 
-        <ActionForm
-          onSubmit={handleResponse}
-        >
-          {Object.keys(pokemon).length === 0 
-            ? <img src={pokeball} alt="" />
-            : <Canvas ref={CanvasRef} width="100" height="100"/>
-          }
+        <ActionForm onSubmit={handleResponse}>
+          {Object.keys(pokemon).length === 0 ? (
+            <img src={pokeball} alt="" />
+          ) : (
+            <Canvas ref={CanvasRef} width="100" height="100" />
+          )}
 
-          
-          
+          <h3>
+            {pokemon.name === undefined ? "---" : pokemon.name.toUpperCase()}
+          </h3>
+
           <div className="form-input">
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Write NAME or ID"
               onChange={handleChange}
               name="pokemonSelect"
             />
           </div>
         </ActionForm>
-
       </Main>
     </Fragment>
-
   );
 }
 
