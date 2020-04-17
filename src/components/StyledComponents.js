@@ -60,6 +60,8 @@ export const Palette = styled.div`
 export const ActionForm = styled.form`
   width: min-content;
   display: block;
+  display: flex;
+  flex-direction: column;
 
   .form-input{
     position: relative;
@@ -85,7 +87,8 @@ export const ActionForm = styled.form`
   img{
     width: 100px;
     height: 100px;
-    margin: 0 auto 30px;
+    margin: 0 auto 3rem;
+    display: block;
   }
   input{
     text-align: center;
@@ -103,4 +106,11 @@ export const ActionForm = styled.form`
         0 100%,   0 40%
       );
   }
+`;
+
+export const Canvas = styled.canvas`
+  width: 100px;
+  height: 100px;
+  /* background-color: red; */
+  margin: 0 auto 3rem;
 `;
