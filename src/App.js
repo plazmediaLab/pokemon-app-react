@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, Fragment } from "react";
-import logo from "./img/logo.svg";
 import pokeball from "./img/pokemon.svg";
 import { Global, css } from "@emotion/core";
 // Styled components
@@ -9,19 +8,21 @@ import {
   ActionForm,
   Canvas,
 } from "./components/StyledComponents";
+// Components
+import ControlPanel from "./components/ControlPanel";
 import axios from "axios";
 
 function App() {
   // Local STATE
   const [ac, setAC] = useState({
-    primary: "#ee5281",
-    secondary: "#777777",
-    tertiary: "#000000",
+    primary: "",
+    secondary: "",
+    tertiary: "",
   });
   const [bc, setBC] = useState({
-    primary: "#90cfb3",
-    secondary: "#327258",
-    tertiary: "#b64455",
+    primary: "#777777",
+    secondary: "#000000",
+    tertiary: "#ee5281",
   });
   const [pokeresponse, setPokeResponse] = useState("");
   const [pokemon, setPokemon] = useState({});
@@ -32,12 +33,18 @@ function App() {
 
   // useAffect
   useEffect(() => {
+    setAC({
+      primary: "#ee5281",
+      secondary: "#777777",
+      tertiary: "#000000",
+    });
     if (Object.keys(pokemon).length > 0) {
       setImgUrl(pokemon.sprites.front_default);
     }
     if (imgurl.trim() !== "") {
       renderPokemon(CanvasRef, imgurl);
     }
+    // eslint-disable-next-line
   }, [pokemon, imgurl]);
 
   // Get CANVAS DATA
@@ -121,8 +128,16 @@ function App() {
             --palette-secondary: ${bc.secondary};
             --palette-tertiary: ${bc.tertiary};
           }
+          body:hover .pokeball {
+            opacity: 0;
+          }
+          body:hover .gradiant {
+            opacity: 1;
+          }
         `}
       />
+
+      <ControlPanel className="control-panel" />
 
       <Main className="main">
         <div className="gradiant"></div>
@@ -135,10 +150,11 @@ function App() {
 
         <ActionForm onSubmit={handleResponse}>
           {Object.keys(pokemon).length === 0 ? (
-            <img src={pokeball} alt="" />
+            <h2>Gotta catch´em all!</h2>
           ) : (
             <Canvas ref={CanvasRef} width="100" height="100" />
           )}
+          <img className="pokeball" src={pokeball} alt="" />
 
           <h3>
             {pokemon.name === undefined ? "---" : pokemon.name.toUpperCase()}
